@@ -14,28 +14,40 @@ set msg (cat msg.txt | tr -d '\n' | tr -s "  ")
 echo "$prefix Where to start cut?[Enter number like 10,20]"
 read -P "$prefix >>> " cut_start
   if [ "$cut_start" = "0" ]
-    echo "1 ->"
-    string sub -l 200 $msg #| termux-clipboard-set
+    set msg_cut (string sub -l 200 $msg)
+    echo "1->
+$msg_cut" | termux-clipboard-set
   else
     if [ "$cut_start" = "" ]
-            echo "1 ->"
-      string sub -l 200 $msg #| termux-clipboard-set
+      set msg_cut (string sub -l 200 $msg)
+      echo "1->
+$msg_cut" | termux-clipboard-set
     else
-      echo "1 ->"
-      string sub -s $cut_start -l 200 $msg #| termux-clipboard-set
+      set msg_cut (string sub -s $cut_start -l 200 $msg)
+      echo "1->
+$msg_cut" | termux-clipboard-set
     end
   end
-    echo "2 ->"
-    string sub -s (math $cut_start+200) -l 200 $msg
-    echo "3 ->"
-    string sub -s (math $cut_start+400) -l 200 $msg
-    echo "4 ->"
-    string sub -s (math $cut_start+600) -l 200 $msg
-    echo "5 ->"
-    string sub -s (math $cut_start+800) -l 200 $msg
+    for round in 2 3 4 5
+      if [ "$round" = "2" ]
+        set stack 200
+      end
+      if [ "$round" = "3" ]
+        set stack 400
+      end
+      if [ "$round" = "4" ]
+        set stack 600
+      end
+      if [ "$round" = "5" ]
+        set stack 800
+      end
+      set msg_cut (string sub -s (math $cut_start+$stack) -l 200 $msg)
+      echo "$round->
+$msg_cut" | termux-clipboard-set
+    end
 end
 set_color yellow
-echo Build_Time_UTC=2021-11-21_05:57:13
+echo Build_Time_UTC=2021-11-21_06:29:39
 set_color normal
 set prefix "[termux_tools]"
 switch $argv[1]
